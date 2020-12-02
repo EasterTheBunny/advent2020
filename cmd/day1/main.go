@@ -27,7 +27,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	product := data.ComputeExpenseReport(d)
-
-	fmt.Println(product)
+	fmt.Printf("product of 2 entries: %d\n", data.ComputeExpenseReport(d, 2020, 2))
+	fmt.Printf("product of 3 entries: %d\n", data.ComputeExpenseReport(d, 2020, 3))
 }
