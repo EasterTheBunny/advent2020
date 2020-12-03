@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/easterthebunny/advent2020/internal/data"
+	"github.com/easterthebunny/advent2020/internal/types"
 )
 
 var (
@@ -27,5 +28,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("valid passwords in data file: %d\n", data.CountValidPasswords(d))
+	fmt.Printf("valid passwords in data file for count rule: %d\n", data.CountValidPasswords(d, types.CountRuleType))
+	fmt.Printf("valid passwords in data file for position rule: %d\n", data.CountValidPasswords(d, types.PositionRuleType))
 }

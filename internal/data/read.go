@@ -2,11 +2,10 @@ package data
 
 import (
 	"bufio"
+	"errors"
 	"io"
-	"regexp"
 	"strconv"
-
-	"github.com/easterthebunny/advent2020/internal/types"
+	"strings"
 )
 
 // ReadData provides a simple way to read data from a file data source
@@ -26,8 +25,8 @@ func ReadData(s io.Reader) (r []int, err error) {
 
 // PasswordDataEntry is a line item in the password data file
 type PasswordDataEntry struct {
-	Rule  *types.PasswordRule
-	Value types.Password
+	Rule  string
+	Value string
 }
 
 // ReadPasswordData creates a slice of password data entries
@@ -36,17 +35,12 @@ func ReadPasswordData(s io.Reader) (*[]PasswordDataEntry, error) {
 
 	scanner := bufio.NewScanner(s)
 	for scanner.Scan() {
-		r := regexp.MustCompile(`(?P<Min>\d+)-(?P<Max>\d+)\s(?P<Value>[a-zA-Z]{1}): (?P<Password>[a-zA-Z]+)`)
-		matches := r.FindStringSubmatch(scanner.Text())
+		opts := strings.Split(scanner.Text(), ": ")
+		if len(opts) != 2 {
+			return nil, errors.New("line parse error")
+		}
 
-		min, _ := strconv.Atoi(matches[1])
-		max, _ := strconv.Atoi(matches[2])
-		runeSlice := []rune(matches[3])
-
-		rule := types.NewPasswordRule(min, max, runeSlice[0])
-		password := types.Password(matches[4])
-
-		entries = append(entries, PasswordDataEntry{Rule: rule, Value: password})
+		entries = append(entries, PasswordDataEntry{Rule: opts[0], Value: opts[1]})
 	}
 
 	err := scanner.Err()

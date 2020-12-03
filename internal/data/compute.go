@@ -2,14 +2,21 @@ package data
 
 import (
 	"sort"
+
+	"github.com/easterthebunny/advent2020/internal/types"
 )
 
 // CountValidPasswords counts all valid passwords in the list
-func CountValidPasswords(list *[]PasswordDataEntry) int {
+func CountValidPasswords(list *[]PasswordDataEntry, tp types.PasswordRuleType) int {
 	count := 0
 
 	for _, e := range *list {
-		if e.Rule.Validate(e.Value) {
+		rule, err := types.NewPasswordRule(e.Rule, tp)
+		if err != nil {
+			return 0
+		}
+
+		if rule.Validate(types.Password(e.Value)) {
 			count++
 		}
 	}
