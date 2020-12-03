@@ -4,6 +4,19 @@ import (
 	"sort"
 )
 
+// CountValidPasswords counts all valid passwords in the list
+func CountValidPasswords(list *[]PasswordDataEntry) int {
+	count := 0
+
+	for _, e := range *list {
+		if e.Rule.Validate(e.Value) {
+			count++
+		}
+	}
+
+	return count
+}
+
 // ComputeExpenseReport finds two numbers in the data source that add up to
 // 2020 and returns the product of the two numbers.
 func ComputeExpenseReport(data []int, sum, dimension int) (product int) {

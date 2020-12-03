@@ -1,4 +1,4 @@
-BIN=day1
+BIN=day2
 
 GOBASE=$(shell pwd)
 GOBIN=$(GOBASE)/bin

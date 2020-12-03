@@ -1,0 +1,26 @@
+package types
+
+import "testing"
+
+func TestValidate(t *testing.T) {
+	type tst struct {
+		min, max int
+		value    rune
+		password Password
+		expected bool
+	}
+
+	testData := []tst{
+		{min: 1, max: 3, value: 'a', password: "abcde", expected: true},
+		{min: 1, max: 3, value: 'b', password: "cdefg", expected: false},
+		{min: 2, max: 9, value: 'c', password: "ccccccccc", expected: true}}
+
+	for _, test := range testData {
+		r := PasswordRule{min: test.min, max: test.max, value: test.value}
+		v := r.Validate(test.password)
+
+		if v != test.expected {
+			t.Errorf("unexpected password validation result %v; expected %v", v, test.expected)
+		}
+	}
+}
