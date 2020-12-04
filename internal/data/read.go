@@ -6,6 +6,8 @@ import (
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/easterthebunny/advent2020/internal/types"
 )
 
 // ReadData provides a simple way to read data from a file data source
@@ -49,4 +51,36 @@ func ReadPasswordData(s io.Reader) (*[]PasswordDataEntry, error) {
 	}
 
 	return &entries, nil
+}
+
+// ReadMapData creates a new Map from a data source
+func ReadMapData(s io.Reader) (*types.Map, error) {
+	points := []types.Position{}
+
+	scanner := bufio.NewScanner(s)
+	line := 0
+	width := 0
+	for scanner.Scan() {
+		trees, w := parseEncodedMapLine(line, scanner.Text())
+		width = w
+		points = append(points, trees...)
+		line++
+	}
+
+	return types.NewMap(points, line-1, width), nil
+}
+
+func parseEncodedMapLine(y int, l string) ([]types.Position, int) {
+	r := []types.Position{}
+	line := []byte(l)
+	width := 0
+
+	for x, b := range line {
+		if b == byte('#') {
+			r = append(r, types.Position{X: x, Y: y})
+		}
+		width = x
+	}
+
+	return r, width + 1
 }
