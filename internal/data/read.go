@@ -58,16 +58,16 @@ func ReadMapData(s io.Reader) (*types.Map, error) {
 	points := []types.Position{}
 
 	scanner := bufio.NewScanner(s)
-	line := 0
+	line := -1
 	width := 0
 	for scanner.Scan() {
-		trees, w := parseEncodedMapLine(line, scanner.Text())
-		width = w
-		points = append(points, trees...)
 		line++
+		trees, w := parseEncodedMapLine(line, scanner.Text())
+		points = append(points, trees...)
+		width = w
 	}
 
-	return types.NewMap(points, line-1, width), nil
+	return types.NewMap(points, line, width), nil
 }
 
 func parseEncodedMapLine(y int, l string) ([]types.Position, int) {
@@ -82,5 +82,5 @@ func parseEncodedMapLine(y int, l string) ([]types.Position, int) {
 		width = x
 	}
 
-	return r, width + 1
+	return r, width
 }

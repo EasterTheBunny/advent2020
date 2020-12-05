@@ -33,11 +33,15 @@ func TestReadMapData(t *testing.T) {
 
 	t.Run("ParseEncodeMapLine", func(t *testing.T) {
 		line := `#...#...#..`
-		trees, _ := parseEncodedMapLine(4, line)
+		trees, width := parseEncodedMapLine(4, line)
 		expected := []types.Position{
 			{X: 0, Y: 4},
 			{X: 4, Y: 4},
 			{X: 8, Y: 4}}
+
+		if width != 10 {
+			t.Fatalf("unexpected line parse width %d; expected %d", width, 10)
+		}
 
 		for i, r := range trees {
 			if r.X != expected[i].X || r.Y != expected[i].Y {
@@ -91,9 +95,9 @@ func TestReadMapData(t *testing.T) {
 		tests := []tst{
 			{
 				path: func(p types.Position) types.Position {
-					return types.Position{X: p.X + 2, Y: p.Y + 1}
+					return types.Position{X: p.X + 1, Y: p.Y + 1}
 				},
-				expected: 1,
+				expected: 2,
 			},
 			{
 				path: func(p types.Position) types.Position {
@@ -103,15 +107,21 @@ func TestReadMapData(t *testing.T) {
 			},
 			{
 				path: func(p types.Position) types.Position {
-					return types.Position{X: p.X + 4, Y: p.Y + 1}
-				},
-				expected: 2,
-			},
-			{
-				path: func(p types.Position) types.Position {
 					return types.Position{X: p.X + 5, Y: p.Y + 1}
 				},
 				expected: 3,
+			},
+			{
+				path: func(p types.Position) types.Position {
+					return types.Position{X: p.X + 7, Y: p.Y + 1}
+				},
+				expected: 4,
+			},
+			{
+				path: func(p types.Position) types.Position {
+					return types.Position{X: p.X + 1, Y: p.Y + 2}
+				},
+				expected: 2,
 			},
 		}
 

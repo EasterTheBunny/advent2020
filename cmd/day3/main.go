@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	source = flag.String("f", "./data.txt", "data file")
+	source = flag.String("f", "./cmd/day3/data.txt", "data file")
+	out    = flag.String("o", "./cmd/day3/data.copy.txt", "data file")
 )
 
 func main() {
@@ -28,27 +29,63 @@ func main() {
 		log.Fatal(err)
 	}
 
+	type slptst struct {
+		path  types.PathFunc
+		trees int
+	}
+
+	slopes := []slptst{
+		{
+			path: func(p types.Position) types.Position {
+				return types.Position{X: p.X + 1, Y: p.Y + 1}
+			},
+			trees: 0,
+		},
+		{
+			path: func(p types.Position) types.Position {
+				return types.Position{X: p.X + 3, Y: p.Y + 1}
+			},
+			trees: 0,
+		},
+		{
+			path: func(p types.Position) types.Position {
+				return types.Position{X: p.X + 5, Y: p.Y + 1}
+			},
+			trees: 0,
+		},
+		{
+			path: func(p types.Position) types.Position {
+				return types.Position{X: p.X + 7, Y: p.Y + 1}
+			},
+			trees: 0,
+		},
+		{
+			path: func(p types.Position) types.Position {
+				return types.Position{X: p.X + 1, Y: p.Y + 2}
+			},
+			trees: 0,
+		},
+	}
+
+	product := 1
+	start := types.Position{X: 0, Y: 0}
 	b := &types.Toboggan{
-		Position: types.Position{X: 0, Y: 0},
+		Position: start,
 		Map:      m}
 
-	moveFunc := func(p types.Position) types.Position {
-		return types.Position{X: p.X + 3, Y: p.Y + 1}
-	}
+	for x, exp := range slopes {
+		b.Position = start
+		err = nil
 
-	trees := 0
-	iterations := 0
-	for ; err != types.ErrOffMap; err = b.Move(moveFunc) {
-		iterations++
-		if err == types.ErrTreeError {
-			trees++
+		for ; err != types.ErrOffMap; err = b.Move(exp.path) {
+			if err == types.ErrTreeError {
+				slopes[x].trees++
+			}
 		}
+
+		product = product * slopes[x].trees
+		fmt.Printf("trees in path %d: %d;\n", x, slopes[x].trees)
 	}
 
-	fmt.Printf("trees in path: %d; iterations: %d; final x: %d\n", trees, iterations, b.Position.X)
-}
-
-func advance(p *types.Position) {
-	p.X += 3
-	p.Y++
+	fmt.Printf("product of all trees: %d\n", product)
 }

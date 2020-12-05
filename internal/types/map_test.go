@@ -18,7 +18,7 @@ func TestTobogganMove(t *testing.T) {
 		{X: 0, Y: 9}, {X: 4, Y: 9}, {X: 5, Y: 9}, {X: 10, Y: 9},
 		{X: 1, Y: 10}, {X: 4, Y: 10}, {X: 8, Y: 10}, {X: 10, Y: 10}}
 
-	m := NewMap(data, 10, 11)
+	m := NewMap(data, 10, 10)
 	b := &Toboggan{
 		Position: Position{X: 0, Y: 0},
 		Map:      m}

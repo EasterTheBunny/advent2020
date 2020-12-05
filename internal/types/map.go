@@ -12,16 +12,26 @@ var (
 )
 
 // NewMap creates a map from inputs
-func NewMap(trees []Position, yLimit, copyFactor int) *Map {
-	return &Map{trees: trees, yLimit: yLimit, copyFactor: copyFactor}
+func NewMap(trees []Position, yLimit, xLimit int) *Map {
+	return &Map{trees: trees, yLimit: yLimit, xLimit: xLimit}
 }
 
 // Map is a position structure for locating trees
 type Map struct {
-	trees      []Position
-	yLimit     int
-	copyFactor int
+	trees  []Position
+	yLimit int
+	xLimit int
 }
+
+/*
+
+11 -> 0
+12 -> 1
+13 -> 2
+21 -> 10
+22 -> 0
+
+*/
 
 // ReadPosition is a utility that returns errors for cases of off map or trees
 func (m *Map) ReadPosition(p Position) error {
@@ -31,8 +41,8 @@ func (m *Map) ReadPosition(p Position) error {
 	}
 
 	// adjust for copy factor
-	for p.X > m.copyFactor {
-		p.X = p.X - m.copyFactor
+	for p.X > m.xLimit {
+		p.X = p.X - m.xLimit - 1
 	}
 
 	// loop through all trees on the map and return an error if one is
