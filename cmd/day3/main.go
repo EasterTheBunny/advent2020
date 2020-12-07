@@ -12,7 +12,6 @@ import (
 
 var (
 	source = flag.String("f", "./cmd/day3/data.txt", "data file")
-	out    = flag.String("o", "./cmd/day3/data.copy.txt", "data file")
 )
 
 func main() {

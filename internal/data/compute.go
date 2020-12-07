@@ -24,6 +24,20 @@ func CountValidPasswords(list *[]PasswordDataEntry, tp types.PasswordRuleType) i
 	return count
 }
 
+// CountValidPassports returns a count of all passports in data
+func CountValidPassports(data []string) (count int) {
+	for _, p := range data {
+		pass := &types.Passport{}
+		pass.Unmarshal([]byte(p))
+		valid := pass.Validate()
+		if valid {
+			count++
+		}
+	}
+
+	return
+}
+
 // ComputeExpenseReport finds two numbers in the data source that add up to
 // 2020 and returns the product of the two numbers.
 func ComputeExpenseReport(data []int, sum, dimension int) (product int) {

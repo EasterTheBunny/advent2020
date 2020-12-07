@@ -84,3 +84,32 @@ func parseEncodedMapLine(y int, l string) ([]types.Position, int) {
 
 	return r, width
 }
+
+// ReadPassportData produces an array of raw passport values
+func ReadPassportData(s io.Reader) (*[]string, error) {
+	r := &[]string{}
+	val := []string{}
+
+	scanner := bufio.NewScanner(s)
+	for scanner.Scan() {
+		scanner.Text()
+		line := scanner.Text()
+
+		if line == "" {
+			l := append(*r, strings.Join(val, " "))
+			r = &l
+			val = []string{}
+		} else {
+			val = append(val, line)
+		}
+	}
+	l := append(*r, strings.Join(val, " "))
+	r = &l
+
+	err := scanner.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
